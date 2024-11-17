@@ -46,7 +46,7 @@ class Drawing
       puts "---------------"
       puts "     |        ||"
       puts "     O        ||"
-      puts "    /|\       ||"
+      puts "    /|\\       ||"
       puts "              ||"
       puts "              ||"
       puts "              ||"
@@ -56,7 +56,7 @@ class Drawing
       puts "---------------"
       puts "     |        ||"
       puts "     O        ||"
-      puts "    /|\       ||"
+      puts "    /|\\       ||"
       puts "    /         ||"
       puts "              ||"
       puts "              ||"
@@ -66,11 +66,12 @@ class Drawing
       puts "---------------"
       puts "     |        ||"
       puts "     O        ||"
-      puts "    /|\       ||"
-      puts "    / \       ||"
+      puts "    /|\\       ||"
+      puts "    / \\       ||"
       puts "              ||"
       puts "              ||"
       puts "              ||"
       puts "================"
     end
   end
+end
