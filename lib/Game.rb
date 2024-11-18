@@ -37,7 +37,7 @@ def game_loop(dictionary)
       # # Display player selections so far
     player.player_selects(secret_word)
     # Display hangman
-    Drawing.draw_stick(player.guess_number)
+    Drawing.draw_stick(player.guesses_remaining)
     secret_word.print_word_status(player)
 
     # Display word in current status (empty spaces, letters present in word)

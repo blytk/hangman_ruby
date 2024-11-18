@@ -55,16 +55,21 @@ class Player
     if !secret_word.secret_word.include?(self.last_guess)
       deduct_guess_remaining
     end
+
+    print_guess_status
+    
   end
 
   def add_guess_number
     self.guess_number += 1
-    Display.print_message("Guess number #{self.guess_number}")
   end
 
   def deduct_guess_remaining
     self.guesses_remaining -= 1
-    Display.print_message("Guesses remaining: #{self.guesses_remaining}")
+  end
+
+  def print_guess_status
+    Display.print_message("Guess # #{self.guess_number} | Guesses remaining: #{self.guesses_remaining}")
   end
 
   def print_guessed_letters
