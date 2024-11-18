@@ -19,6 +19,9 @@ def game_loop(dictionary)
   game_over = false
   # Create secret word to guess
   secret_word = SecretWord.new(dictionary.sample)
+  ######### DEBUG
+  p secret_word.secret_word
+  ######## DEBUG
   # Create player
   player = Player.new
   # While game is not over
@@ -31,10 +34,11 @@ def game_loop(dictionary)
     # Player makes a choice
       # Display how many guesses so far (player.player_selects triggers this)
       # Display how many guesses remaining (player.player_selects triggers this)
-    player.player_selects  
+      # # Display player selections so far
+    player.player_selects(secret_word)
     # Display hangman
     Drawing.draw_stick(player.guess_number)
-    # Display player selections so far
+    secret_word.print_word_status(player)
 
     # Display word in current status (empty spaces, letters present in word)
 

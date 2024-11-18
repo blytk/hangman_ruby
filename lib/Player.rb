@@ -13,7 +13,7 @@ class Player
     @letters_guessed = []
   end
 
-  def player_selects
+  def player_selects(secret_word)
     input = ""
     # input needs to be a letter a-z / A-Z
     while true
@@ -42,16 +42,33 @@ class Player
       end
     end
 
-    update_guess_number
+    
       
     Display.print_message("You have selected: #{input}")
     self.last_guess = input
     self.letters_guessed.push(input)
+    self.print_guessed_letters
+
+    add_guess_number
+
+    # If guess it not in secret word, we deduct 1 remaining guess
+    if !secret_word.secret_word.include?(self.last_guess)
+      deduct_guess_remaining
+    end
   end
 
-  def update_guess_number
+  def add_guess_number
     self.guess_number += 1
-    self.guesses_remaining -=1
-    Display.print_message("Guess number #{self.guess_number} | Guesses remaining: #{self.guesses_remaining}")
+    Display.print_message("Guess number #{self.guess_number}")
   end
+
+  def deduct_guess_remaining
+    self.guesses_remaining -= 1
+    Display.print_message("Guesses remaining: #{self.guesses_remaining}")
+  end
+
+  def print_guessed_letters
+    Display.print_message("The characters you have chosen so far are: #{@letters_guessed}")
+  end
+
 end
