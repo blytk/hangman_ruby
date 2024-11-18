@@ -3,9 +3,12 @@ require_relative "Display"
 # Player class
 class Player
   attr_accessor :guess_number, :guesses_remaining, :last_guess, :letters_guessed
+
+  @@GUESSES_REMAINING = 7
+
   def initialize
     @guess_number = 0
-    @guesses_remaining = 7
+    @guesses_remaining = @@GUESSES_REMAINING
     @last_guess = ""
     @letters_guessed = []
   end
@@ -38,9 +41,17 @@ class Player
         break
       end
     end
+
+    update_guess_number
       
     Display.print_message("You have selected: #{input}")
     self.last_guess = input
     self.letters_guessed.push(input)
+  end
+
+  def update_guess_number
+    self.guess_number += 1
+    self.guesses_remaining -=1
+    Display.print_message("Guess number #{self.guess_number} | Guesses remaining: #{self.guesses_remaining}")
   end
 end

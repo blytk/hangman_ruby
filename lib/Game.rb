@@ -10,14 +10,39 @@ File.open("10000_word_dictionary.txt", "r") do |file|
   lines = file.readlines
   lines.each do |word|
     if word.length >= 5 && word.length <= 12
-            dictionary.push(word)
+            dictionary.push(word.chomp)
     end    
   end
 end
 
-secret_word = SecretWord.new(dictionary.sample)
-player = Player.new
-player.player_selects
+def game_loop(dictionary)
+  game_over = false
+  # Create secret word to guess
+  secret_word = SecretWord.new(dictionary.sample)
+  # Create player
+  player = Player.new
+  # While game is not over
+  until game_over == true
+    if player.guesses_remaining <= 0
+      game_over = true
+      Display.print_message("You are out of guesses, game is over")
+      break
+    end
+    # Player makes a choice
+      # Display how many guesses so far (player.player_selects triggers this)
+      # Display how many guesses remaining (player.player_selects triggers this)
+    player.player_selects  
+    # Display hangman
+    Drawing.draw_stick(player.guess_number)
+    # Display player selections so far
+
+    # Display word in current status (empty spaces, letters present in word)
+
+  end
+  
+end
+
+game_loop(dictionary)
 
 
 
