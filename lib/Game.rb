@@ -1,5 +1,4 @@
 require_relative "Drawing"
-require_relative "Player"
 require_relative "SecretWord"
 require_relative "Display"
 
@@ -90,9 +89,20 @@ class Game
     Display.print_message("The characters you have chosen so far are: #{@letters_guessed}")
   end
   
+  def victory?(secret_word)
+    secret_word.secret_word.split("").each do |char|
+      if @letters_guessed.length == 0
+        return false
+      elsif !@letters_guessed.include?(char)
+        return false
+      end
+    end
+    return true
+  end
 
-  def game_loop
+  def game_loop(game)
     game_over = false
+    victory = false
     # Create secret word to guess
     secret_word = SecretWord.new(@dictionary.sample)
     ######### DEBUG
@@ -112,14 +122,24 @@ class Game
         # # Display player selections so far
       player_selects(secret_word)
       # Display hangman
-      Drawing.draw_stick(player.guesses_remaining)
-      secret_word.print_word_status(player)
-
+      Drawing.draw_stick(@guesses_remaining)
       # Display word in current status (empty spaces, letters present in word)
+      secret_word.print_word_status(game)
+
+      # check if player has won
+      if victory?(secret_word)
+        victory = true
+        game_over = true
+        Display.print_message("You have guessed the word and won the game")
+      end    
 
     end
   end
 end
 
+# New game
 game = Game.new
-game.game_loop
+# Load dictionary
+game.load_dictionary
+# Game loop
+game.game_loop(game)

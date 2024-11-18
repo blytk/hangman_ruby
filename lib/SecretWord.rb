@@ -1,4 +1,3 @@
-require_relative "Player"
 require_relative "Display"
 
 class SecretWord
@@ -11,18 +10,18 @@ class SecretWord
     @letters = word.chomp.split("")
   end
 
-  def print_word_status(player)
+  def print_word_status(game)
     Display.print_message("Secret Word: ")
-    Display.print_message(create_temp_word(player))
+    Display.print_message(create_temp_word(game))
   end
 
-  def create_temp_word(player)
+  def create_temp_word(game)
     temp_word_array = []
     @empty_spaces.times do 
       temp_word_array.push(nil)
     end
 
-    letters_guessed = player.letters_guessed
+    letters_guessed = game.letters_guessed
     
     secret_word_array = @secret_word.split("")
     secret_word_array.each_with_index do |char, char_index|
@@ -35,5 +34,6 @@ class SecretWord
 
     temp_word_string = temp_word_array.join(" ")
     temp_word_string
+
   end
 end
