@@ -1,6 +1,7 @@
 require_relative "Drawing"
 require_relative "SecretWord"
 require_relative "Display"
+require "yaml"
 
 class Game
   attr_accessor :dictionary, :guess_number, :guesses_remaining, :letters_guessed, :last_guess, :secret_word
@@ -15,6 +16,40 @@ class Game
     @letters_guessed = []
     @last_guess = ""
     @secret_word = nil
+  end
+
+  def save_game
+    # serialize game object
+    yaml_string = YAML.dump(self)
+    # save to file
+    if !Dir.exist?("./saves")
+      Dir.mkdir("./saves")
+    end
+    puts "Enter a filename to save"
+    save_name = gets.chomp.downcase
+    File.write("./saves/#{save_name}.yaml", yaml_string)
+    true
+  end
+
+  def load_game
+    # deserialize game object
+    puts "Enter the name of the save to load"
+    save_to_load = gets.chomp.downcase
+    if File.exist?("./saves/#{save_to_load}.yaml")
+          File.open("./saves/#{save_to_load}.yaml") do |file|
+            yaml_content = file.read
+            deserialized_object = YAML.safe_load(yaml_content, permitted_classes: [Game])
+            @dictionary = deserialized_object.dictionary
+            @guess_number = deserialized_object.guess_number
+            @guesses_remaining = deserialized_object.guesses_remaining
+            @letters_guessed = deserialized_object.letters_guessed
+            @last_guess = deserialized_object.last_guess
+            @secret_word = deserialized_object.secret_word
+          end
+      Display.print_message("Game loaded successfuly")
+    else
+      Display.print_message("Save game does not exist or error loading the game")  
+    end
   end
 
   # Load dictionary, words between 5-12 characters
@@ -36,25 +71,35 @@ class Game
       check2 = false
 
       Display.print_message("Enter your guess: ")
-      input = gets.chomp.downcase.chr
+      input = gets.chomp.downcase
+      if input == "save"
+        # save the game
+        save_game
+      elsif input == "load"
+        # load a game
+        load_game
 
-      if input.match?(/\A[a-zA-Z]\z/)
-        check1 = true
       else
-        Display.print_message("Invalid guess, try a letter")
+        input = input.chr
+        if input.match?(/\A[a-zA-Z]\z/)
+          check1 = true
+        else
+          Display.print_message("Invalid guess, try a letter")
+        end
+  
+        # input should not have been already guessed
+        if letters_guessed.include?(input)
+          Display.print_message("That letter has already been tried. Try another letter.")
+          input = ""
+        else
+          check2 = true
+        end
+  
+        if check1 == true && check2 == true
+          break
+        end
       end
 
-      # input should not have been already guessed
-      if letters_guessed.include?(input)
-        Display.print_message("That letter has already been tried. Try another letter.")
-        input = ""
-      else
-        check2 = true
-      end
-
-      if check1 == true && check2 == true
-        break
-      end
 
     end
     Display.print_message("You have selected: #{input}")
