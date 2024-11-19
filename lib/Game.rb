@@ -15,7 +15,8 @@ class Game
     @guesses_remaining = @@initial_number_of_guesses
     @letters_guessed = []
     @last_guess = ""
-    @secret_word = nil
+    load_dictionary
+    @secret_word = SecretWord.new(@dictionary.sample)
   end
 
   def save_game
@@ -50,6 +51,21 @@ class Game
     else
       Display.print_message("Save game does not exist or error loading the game")  
     end
+  end
+
+  def reset_game
+    # Reset attributes for new game (not dictionary)
+    @guess_number = 0
+    @guesses_remaining = @@initial_number_of_guesses
+    @letters_guessed = []
+    @last_guess = ""
+    @letters_guessed = []
+    # Create secret word to guess
+    @secret_word = SecretWord.new(@dictionary.sample)
+    ######### DEBUG
+    # p secret_word.secret_word
+    ######## DEBUG
+          
   end
 
   # Load dictionary, words between 5-12 characters
@@ -145,39 +161,58 @@ class Game
     return true
   end
 
+  def play_again?
+    Display.print_message("Do you want to play again?")
+    input = gets.chomp.downcase.chr
+    if input == "y"
+      true
+    else
+      false
+    end
+  end
+
   def game_loop(game)
     game_over = false
-    victory = false
-    # Create secret word to guess
-    secret_word = SecretWord.new(@dictionary.sample)
-    ######### DEBUG
-    p secret_word.secret_word
-    ######## DEBUG
-    #
-    # While game is not over
-    until game_over == true
-      if @guesses_remaining <= 0
-        game_over = true
-        Display.print_message("You are out of guesses, game is over")
-        break
+    play_again = true
+
+    while play_again == true
+
+      # While game is not over
+      until game_over == true
+        if @guesses_remaining <= 0
+          game_over = true
+          Display.print_message("You are out of guesses, game is over")
+          Display.print_message("The secret word was #{game.secret_word.secret_word}")
+          break
+        end
+        # Player makes a choice
+          # Display how many guesses so far (player.player_selects triggers this)
+          # Display how many guesses remaining (player.player_selects triggers this)
+          # # Display player selections so far
+        player_selects(secret_word)
+        # Display hangman
+        Drawing.draw_stick(@guesses_remaining)
+        # Display word in current status (empty spaces, letters present in word)
+        secret_word.print_word_status(game)
+
+        # check if player has won
+        if victory?(secret_word)
+          game_over = true
+          Display.print_message("You have guessed the word and won the game")
+        end 
       end
-      # Player makes a choice
-        # Display how many guesses so far (player.player_selects triggers this)
-        # Display how many guesses remaining (player.player_selects triggers this)
-        # # Display player selections so far
-      player_selects(secret_word)
-      # Display hangman
-      Drawing.draw_stick(@guesses_remaining)
-      # Display word in current status (empty spaces, letters present in word)
-      secret_word.print_word_status(game)
+      play_again = play_again?
+      if play_again
+        game_over = false
 
-      # check if player has won
-      if victory?(secret_word)
-        victory = true
-        game_over = true
-        Display.print_message("You have guessed the word and won the game")
-      end    
+        # reset_game will restore the object to new game conditions
+        # I think there is a better way of handling this (new object) but it doesn't seem obvious to me right now
+        reset_game
 
+      else
+        Display.print_message("Goodbye")
+      end
+    
     end
   end
 end
