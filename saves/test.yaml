@@ -8450,8 +8450,17 @@ dictionary:
 - arbor
 - mediawiki
 - poison
-guess_number: 0
-guesses_remaining: 7
-letters_guessed: []
-last_guess: ''
-secret_word:
+guess_number: 1
+guesses_remaining: 6
+letters_guessed:
+- "n"
+last_guess: "n"
+secret_word: !ruby/object:SecretWord
+  secret_word: dept
+  length: 4
+  empty_spaces: 4
+  letters:
+  - d
+  - e
+  - p
+  - t

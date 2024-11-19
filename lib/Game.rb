@@ -19,6 +19,8 @@ class Game
     @secret_word = SecretWord.new(@dictionary.sample)
   end
 
+  private
+
   def save_game
     # serialize game object
     yaml_string = YAML.dump(self)
@@ -39,7 +41,7 @@ class Game
     if File.exist?("./saves/#{save_to_load}.yaml")
           File.open("./saves/#{save_to_load}.yaml") do |file|
             yaml_content = file.read
-            deserialized_object = YAML.safe_load(yaml_content, permitted_classes: [Game])
+            deserialized_object = YAML.safe_load(yaml_content, permitted_classes: [Game, SecretWord])
             @dictionary = deserialized_object.dictionary
             @guess_number = deserialized_object.guess_number
             @guesses_remaining = deserialized_object.guesses_remaining
@@ -73,7 +75,7 @@ class Game
     File.open(@@dictionary_file, "r") do |file|
       lines = file.readlines
       lines.each do |word|
-        if word.length >= 5 && word.length <= 12
+        if word.chomp.length >= 5 && word.length <= 12
           @dictionary.push(word.chomp.downcase)
         end
       end
@@ -171,6 +173,7 @@ class Game
     end
   end
 
+  public 
   def game_loop(game)
     game_over = false
     play_again = true
@@ -219,7 +222,5 @@ end
 
 # New game
 game = Game.new
-# Load dictionary
-game.load_dictionary
 # Game loop
 game.game_loop(game)
