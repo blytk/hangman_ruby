@@ -177,6 +177,7 @@ class Game
   def game_loop(game)
     game_over = false
     play_again = true
+    Display.print_message("Welcome to Hangman. You can type save / load during the prompt in order to save / load the status of your game")
 
     while play_again == true
 
